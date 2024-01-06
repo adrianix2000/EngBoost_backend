@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.adrianix2000.Engboost.Entities.*;
+import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.InMemeryUserRepository;
 
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class UserService {
         this.passwordEncoder = encoder;
     }
 
-    public OperationRespone registration(UserRegistrationEntity registrationEntity) {
+    public User registration(UserRegistrationEntity registrationEntity) {
         if(repository.findByUserName(registrationEntity.getUserName()).isEmpty()) {
             User newUser = User.builder()
                     .id(10L)
@@ -37,42 +38,23 @@ public class UserService {
 
             repository.addUser(newUser);
 
-            return OperationRespone.builder()
-                    .information("Utworzono unowego użytkownika")
-                    .status(HttpStatus.CREATED)
-                    .obj(null)
-                    .build();
+            return newUser;
+        } else {
+            throw new AppException("użytkownik o podanej nazwie już istnieje !", HttpStatus.BAD_REQUEST);
         }
 
-        return OperationRespone.builder()
-                .information("użytkownik o podanej nazwie już istnieje !")
-                .status(HttpStatus.CONFLICT)
-                .obj(null)
-                .build();
     }
 
-    public OperationRespone login(UserLoginRequest loginRequest) {
+    public User login(UserLoginRequest loginRequest) {
         Optional<User> foundedUser = repository.findByUserName(loginRequest.getUsername());
         if(foundedUser.isPresent()) {
             User user = foundedUser.get();
             if(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return OperationRespone.builder()
-                        .information("user was founded")
-                        .status(HttpStatus.FOUND)
-                        .obj(user)
-                        .build();
+               return user;
             }
-            return OperationRespone.builder()
-                    .information("bad password")
-                    .status(HttpStatus.OK)
-                    .obj(null)
-                    .build();
+            throw new AppException("Podano nie prawidłowe hasło", HttpStatus.BAD_REQUEST);
+        } else {
+            throw new AppException("Podano nie prawidłową nazwę użytkownika", HttpStatus.NOT_FOUND);
         }
-
-        return OperationRespone.builder()
-                .information("login failed")
-                .status(HttpStatus.NOT_FOUND)
-                .obj(null)
-                .build();
     }
 }
