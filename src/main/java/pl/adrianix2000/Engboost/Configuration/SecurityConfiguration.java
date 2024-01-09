@@ -51,7 +51,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(c -> c.configurationSource(configureCors()))
                 .authorizeHttpRequests((request) ->
-                        request.requestMatchers(HttpMethod.POST, "/register", "/login", "/users/getAll").permitAll()
+                        request.requestMatchers("/register", "/login", "/token", "/users/getAll").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(c -> c.disable())

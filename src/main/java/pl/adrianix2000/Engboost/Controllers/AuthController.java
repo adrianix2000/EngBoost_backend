@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.adrianix2000.Engboost.Entities.User;
 import pl.adrianix2000.Engboost.Entities.UserLoginRequest;
 import pl.adrianix2000.Engboost.Entities.UserRegistrationEntity;
+import pl.adrianix2000.Engboost.services.JWTService;
 import pl.adrianix2000.Engboost.services.UserService;
 
 @Controller
@@ -18,7 +19,11 @@ import pl.adrianix2000.Engboost.services.UserService;
 @Slf4j
 public class AuthController {
 
+    @Autowired
     private UserService service;
+
+    @Autowired
+    private JWTService jwtService;
 
     @Autowired
     public AuthController(UserService service) {
@@ -40,5 +45,10 @@ public class AuthController {
     @RequestMapping(path = "/hello", method = RequestMethod.POST)
     public String hello() {
         return "hello world";
+    }
+
+    @RequestMapping(path = "/token", method = RequestMethod.GET)
+    public String getToken() {
+        return jwtService.generateJwtToken();
     }
 }
