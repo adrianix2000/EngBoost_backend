@@ -4,9 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import pl.adrianix2000.Engboost.Entities.UserDto;
 
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 @Service
@@ -14,7 +19,7 @@ public class JWTService {
 
     private String privateKey = "crtWfNtHLfBtJYPYvYQ7dWingGINZ3Q6E86EwrNxh3s";
 
-    public String generateJwtToken() {
+    public String generateJwtToken(UserDto user) {
         Date currentDate = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -23,9 +28,10 @@ public class JWTService {
         Date expirationDate = calendar.getTime();
 
         String generatedToken = Jwts.builder()
-                .claim("name", "Adrian")
-                .claim("email", "daudshlock")
-                .setSubject("Test")
+                .claim("firstname", user.getFirstname())
+                .claim("lastname", user.getLastname())
+                .claim("email", user.getEmail())
+                .setSubject(user.getUsername())
                 .setIssuedAt(currentDate)
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, privateKey)
@@ -34,19 +40,22 @@ public class JWTService {
         return generatedToken;
     }
 
-    public boolean verifyJwtToken(String token)  {
-        try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(privateKey)
-                    .parseClaimsJws(token)
-                    .getBody();
+    public Authentication verifyJwtToken(String token) {
 
-            System.out.println("Token verified. Subject: " + claims.getSubject());
+        Claims claims = Jwts.parser()
+                .setSigningKey(privateKey)
+                .parseClaimsJws(token)
+                .getBody();
 
-            return true;
-        } catch (SignatureException e) {
-            System.out.println("Invalid token signature");
-            return false;
-        }
+        UserDto user = UserDto.builder()
+                .username(claims.getSubject())
+                .email((String) claims.get("email"))
+                .firstname((String) claims.get("firstname"))
+                .lastname((String) claims.get("lastname"))
+                .build();
+
+        return new UsernamePasswordAuthenticationToken(user,
+                null, Collections.emptyList());
+
     }
 }

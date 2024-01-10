@@ -47,8 +47,8 @@ public class AuthController {
         return "hello world";
     }
 
-    @RequestMapping(path = "/token", method = RequestMethod.GET)
-    public String getToken() {
-        return jwtService.generateJwtToken();
-    }
+//    @RequestMapping(path = "/token", method = RequestMethod.GET)
+//    public String getToken() {
+//        return jwtService.generateJwtToken();
+//    }
 }
