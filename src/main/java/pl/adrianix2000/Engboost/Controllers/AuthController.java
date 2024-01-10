@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import pl.adrianix2000.Engboost.Entities.User;
+import pl.adrianix2000.Engboost.Entities.UserDto;
 import pl.adrianix2000.Engboost.Entities.UserLoginRequest;
 import pl.adrianix2000.Engboost.Entities.UserRegistrationEntity;
 import pl.adrianix2000.Engboost.services.JWTService;
@@ -37,8 +38,10 @@ public class AuthController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public ResponseEntity<User> login(@RequestBody UserLoginRequest request) {
-        User result = service.login(request);
+    public ResponseEntity<UserDto> login(@RequestBody UserLoginRequest request) {
+        UserDto result = service.login(request);
+        String token = jwtService.generateJwtToken(result);
+        result.setToken(token);
         return ResponseEntity.ok(result);
     }
 

@@ -45,12 +45,17 @@ public class UserService {
 
     }
 
-    public User login(UserLoginRequest loginRequest) {
+    public UserDto login(UserLoginRequest loginRequest) {
         Optional<User> foundedUser = repository.findByUserName(loginRequest.getUsername());
         if(foundedUser.isPresent()) {
             User user = foundedUser.get();
             if(passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-               return user;
+               return UserDto.builder()
+                       .username(user.getUserName())
+                       .lastname(user.getLastName())
+                       .firstname(user.getFirstName())
+                       .email(user.getEmail())
+                       .build();
             }
             throw new AppException("Podano nie prawidłowe hasło", HttpStatus.BAD_REQUEST);
         } else {
