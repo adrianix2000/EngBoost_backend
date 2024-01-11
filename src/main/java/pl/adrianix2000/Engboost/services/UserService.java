@@ -1,5 +1,6 @@
 package pl.adrianix2000.Engboost.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,26 +9,22 @@ import org.springframework.stereotype.Service;
 import pl.adrianix2000.Engboost.Entities.*;
 import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.InMemeryUserRepository;
+import pl.adrianix2000.Engboost.repositories.UserRepository;
 
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    private InMemeryUserRepository repository;
+    @Autowired
+    private UserRepository repository;
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(InMemeryUserRepository repository, BCryptPasswordEncoder encoder) {
-        this.repository = repository;
-        this.passwordEncoder = encoder;
-    }
-
     public User registration(UserRegistrationEntity registrationEntity) {
         if(repository.findByUserName(registrationEntity.getUserName()).isEmpty()) {
             User newUser = User.builder()
-                    .id(10L)
                     .userName(registrationEntity.getUserName())
                     .firstName(registrationEntity.getFirstName())
                     .lastName(registrationEntity.getLastName())
@@ -36,7 +33,7 @@ public class UserService {
                     .role(UserRole.USER)
                     .build();
 
-            repository.addUser(newUser);
+            repository.save(newUser);
 
             return newUser;
         } else {
