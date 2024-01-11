@@ -1,5 +1,7 @@
 package pl.adrianix2000.Engboost.Configuration;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -18,12 +20,14 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.adrianix2000.Engboost.services.JWTService;
 import pl.adrianix2000.Engboost.services.SecurityUserService;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     @Bean
@@ -47,15 +51,17 @@ public class SecurityConfiguration {
 //                .build();
 //    }
 
+    private final JWTService jwtService;
+
     @Bean
     public SecurityFilterChain configureSecurityChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .addFilterBefore(new AuthenticationFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(new AuthenticationFilter(jwtService), BasicAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(c -> c.configurationSource(configureCors()))
                 .authorizeHttpRequests((request) ->
-                        request.requestMatchers("/register", "/login", "/token", "/users/getAll").permitAll()
+                        request.requestMatchers("/register", "/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(c -> c.disable())
