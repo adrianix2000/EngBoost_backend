@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class SessionDto {
+    private long id;
     private String titie;
     private Date createdate;
     private boolean isshared;

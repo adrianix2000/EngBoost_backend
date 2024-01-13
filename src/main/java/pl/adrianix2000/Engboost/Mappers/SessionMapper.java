@@ -21,6 +21,7 @@ public class SessionMapper {
 
     public SessionDto map(Session session) {
         return SessionDto.builder()
+                .id(session.getId())
                 .titie(session.getTitle())
                 .createdate(session.getCreatedate())
                 .isshared(session.isIsshared())

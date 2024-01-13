@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.adrianix2000.Engboost.services.JWTService;
 import pl.adrianix2000.Engboost.services.SecurityUserService;
 
+
 import java.util.List;
 
 @Configuration
@@ -61,12 +62,15 @@ public class SecurityConfiguration {
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(c -> c.configurationSource(configureCors()))
                 .authorizeHttpRequests((request) ->
-                        request.requestMatchers("/register", "/login", "/sessions/getAll", "/sessions/add").permitAll()
+                        request.requestMatchers("/register", "/login", "/sessions/getAll",
+                                        "/sessions/add", "/sessions/getByUserName")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(c -> c.disable())
                 .build();
     }
+
 
     @Bean
     public CorsConfigurationSource configureCors() {
