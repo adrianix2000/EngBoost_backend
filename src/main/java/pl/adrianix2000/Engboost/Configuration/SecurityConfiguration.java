@@ -62,8 +62,7 @@ public class SecurityConfiguration {
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(c -> c.configurationSource(configureCors()))
                 .authorizeHttpRequests((request) ->
-                        request.requestMatchers("/register", "/login", "/sessions/getAll",
-                                        "/sessions/add", "/sessions/getByUserName")
+                        request.requestMatchers("/register", "/login")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )

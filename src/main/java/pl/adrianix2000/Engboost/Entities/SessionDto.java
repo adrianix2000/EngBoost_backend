@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 public class SessionDto {
     private long id;
-    private String titie;
+    private String title;
     private Date createdate;
     private boolean isshared;
     private long viewnumber;

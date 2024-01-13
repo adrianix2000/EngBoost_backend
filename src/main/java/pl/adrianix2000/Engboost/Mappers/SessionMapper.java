@@ -22,7 +22,7 @@ public class SessionMapper {
     public SessionDto map(Session session) {
         return SessionDto.builder()
                 .id(session.getId())
-                .titie(session.getTitle())
+                .title(session.getTitle())
                 .createdate(session.getCreatedate())
                 .isshared(session.isIsshared())
                 .viewnumber(session.getViewnumber())
@@ -34,7 +34,7 @@ public class SessionMapper {
         Optional<User> author = userRepository.findByUserName(sessionDto.getUsername());
         if(author.isPresent()) {
             return Session.builder()
-                    .title(sessionDto.getTitie())
+                    .title(sessionDto.getTitle())
                     .author(author.get())
                     .viewnumber(sessionDto.getViewnumber())
                     .isshared(sessionDto.isIsshared())

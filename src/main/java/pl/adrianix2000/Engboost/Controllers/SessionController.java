@@ -43,12 +43,12 @@ public class SessionController {
     }
 
     @RequestMapping(path = "/getByUserName", method = RequestMethod.GET)
-    public ResponseEntity<String> getSessionsByUserName(@RequestParam String username) {
+    public ResponseEntity<List<SessionDto>> getSessionsByUserName(@RequestParam String username) {
 
         List<SessionDto> list = repository.findSessionsByUserName(username)
                 .stream().map(s -> mapper.map(s)).toList();
 
         log.info("" + list);
-        return ResponseEntity.ok("everythink is ok!");
+        return ResponseEntity.ok(list);
     }
 }
