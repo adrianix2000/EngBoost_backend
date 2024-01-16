@@ -24,7 +24,7 @@ public class JWTService {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(currentDate);
-        calendar.add(Calendar.MINUTE, 5);
+        calendar.add(Calendar.MINUTE, 15);
         Date expirationDate = calendar.getTime();
 
         String generatedToken = Jwts.builder()
