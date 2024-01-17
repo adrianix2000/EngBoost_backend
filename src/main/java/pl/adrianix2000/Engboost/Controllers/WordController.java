@@ -27,7 +27,7 @@ public class WordController {
 
 //        log.info("Session id to: " + sessionId);
         log.info("dsfdsfsdf333333333333333333333333333333333333333 " + sessionId);
-        service.processFile(file);
+        service.processFile(file, sessionId);
         return ResponseEntity.ok("przeczytano plik");
     }
 }
