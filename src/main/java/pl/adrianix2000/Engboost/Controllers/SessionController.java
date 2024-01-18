@@ -4,17 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.adrianix2000.Engboost.Entities.Session;
 import pl.adrianix2000.Engboost.Entities.SessionCreateRequest;
 import pl.adrianix2000.Engboost.Entities.SessionDto;
 import pl.adrianix2000.Engboost.Mappers.SessionMapper;
+import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.SessionRepository;
 import pl.adrianix2000.Engboost.services.SessionService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/sessions")
@@ -50,5 +53,18 @@ public class SessionController {
 
         log.info("" + list);
         return ResponseEntity.ok(list);
+    }
+
+    @RequestMapping(path = "/getById", method = RequestMethod.GET)
+    public ResponseEntity<SessionDto> getById(@RequestParam long id) {
+
+        Optional<Session> session = repository.findById(id);
+        if(session.isPresent()) {
+            SessionDto sessionDto = mapper.map(session.get());
+            return ResponseEntity.ok(sessionDto);
+        } else {
+            throw new AppException("Sesja nie została znaleziona", HttpStatus.NOT_FOUND);
+        }
+
     }
 }
