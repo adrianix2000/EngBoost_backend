@@ -67,4 +67,10 @@ public class SessionController {
         }
 
     }
+
+    @RequestMapping(path = "/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteById(@RequestParam long sessionId) {
+        service.deleteSession(sessionId);
+        return ResponseEntity.ok("Usunięto sesje");
+    }
 }

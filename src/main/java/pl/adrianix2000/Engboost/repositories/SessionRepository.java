@@ -15,5 +15,7 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     @Query("SELECT s FROM Session s INNER JOIN s.author u WHERE u.userName = :username")
     List<Session> findSessionsByUserName(@Param("username") String username);
 
+    void deleteById(long id);
+
 
 }

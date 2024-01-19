@@ -52,4 +52,13 @@ public class SessionService {
         }
     }
 
+    public void deleteSession(long id) {
+        Optional<Session> session = sessionRepository.findById(id);
+        if(session.isPresent()) {
+            Session foundedSession = session.get();
+            sessionRepository.deleteById(foundedSession.getId());
+        } else {
+            throw new AppException("Nie odnaleziono sesji", HttpStatus.NOT_FOUND);
+        }
+    }
 }
