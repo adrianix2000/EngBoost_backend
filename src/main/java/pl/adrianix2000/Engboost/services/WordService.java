@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.adrianix2000.Engboost.Entities.Session;
+import pl.adrianix2000.Engboost.Entities.SessionModifyRequest;
 import pl.adrianix2000.Engboost.Entities.Word;
+import pl.adrianix2000.Engboost.Entities.WordDtoWithId;
 import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.SessionRepository;
 import pl.adrianix2000.Engboost.repositories.WordRepository;
@@ -83,6 +85,27 @@ public class WordService {
             wordRepository.deleteById(foundedword.getId());
         } else {
             throw new AppException("Nie odnaleziono słówka", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void modifyWordData(WordDtoWithId request, long id) {
+        Optional<Word> word = wordRepository.findById(id);
+        if(word.isPresent()) {
+            Word foundedWord = word.get();
+
+            if(request.getEnglishmean() != null && request.getPolishmean() != null &&
+                request.getPolishmean().length() >= 2 && request.getEnglishmean().length() >= 2) {
+
+                foundedWord.setEnglishmean(request.getEnglishmean());
+                foundedWord.setPolishmean(request.getPolishmean());
+
+                wordRepository.save(foundedWord);
+            } else {
+                throw new AppException("Podano nie poprawne dane", HttpStatus.BAD_REQUEST);
+            }
+        }
+        else {
+            throw new AppException("Nie zanaleziono słówka", HttpStatus.NOT_FOUND);
         }
     }
 }

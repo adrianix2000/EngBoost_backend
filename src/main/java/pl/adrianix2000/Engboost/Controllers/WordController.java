@@ -66,4 +66,11 @@ public class WordController {
         service.deleteWord(wordId);
         return ResponseEntity.ok("Usunięto słowko");
     }
+
+    @RequestMapping(path = "/modify", method = RequestMethod.PATCH)
+    public ResponseEntity<String> modifyWord(@RequestParam long wordId,
+                                             @RequestBody WordDtoWithId request) {
+        service.modifyWordData(request, wordId);
+        return ResponseEntity.ok("Udalo sie zmodyfikowac dane slowka pojedynczego");
+    }
 }
