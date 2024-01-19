@@ -14,4 +14,6 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     @Query("SELECT w FROM Word w WHERE w.session.id = :sessionId")
     List<Word> findWordBySessionId(@Param("sessionId") long sessionId);
+
+    void deleteById(long id);
 }

@@ -75,4 +75,14 @@ public class WordService {
                     .build();
         }
     }
+
+    public void deleteWord(long id) {
+        Optional<Word> word = wordRepository.findById(id);
+        if(word.isPresent()) {
+            Word foundedword = word.get();
+            wordRepository.deleteById(foundedword.getId());
+        } else {
+            throw new AppException("Nie odnaleziono słówka", HttpStatus.NOT_FOUND);
+        }
+    }
 }

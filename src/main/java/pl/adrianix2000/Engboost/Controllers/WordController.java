@@ -8,10 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.adrianix2000.Engboost.Entities.Session;
-import pl.adrianix2000.Engboost.Entities.SessionDto;
-import pl.adrianix2000.Engboost.Entities.Word;
-import pl.adrianix2000.Engboost.Entities.WordDto;
+import pl.adrianix2000.Engboost.Entities.*;
 import pl.adrianix2000.Engboost.Mappers.WordMapper;
 import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.WordRepository;
@@ -53,5 +50,20 @@ public class WordController {
                 .map(WordMapper::map)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(wordList);
+    }
+
+    @RequestMapping(path = "/getBySessionId2", method = RequestMethod.GET)
+    public ResponseEntity<List<WordDtoWithId>> getBySessionId2(@RequestParam long sessionId) {
+        List<WordDtoWithId> wordList = repository.findWordBySessionId(sessionId)
+                .stream()
+                .map(WordMapper::mapWithId)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(wordList);
+    }
+
+    @RequestMapping(path = "/delete", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteById(@RequestParam long wordId) {
+        service.deleteWord(wordId);
+        return ResponseEntity.ok("Usunięto słowko");
     }
 }
