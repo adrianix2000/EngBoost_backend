@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.adrianix2000.Engboost.Entities.Session;
 import pl.adrianix2000.Engboost.Entities.SessionCreateRequest;
 import pl.adrianix2000.Engboost.Entities.SessionDto;
+import pl.adrianix2000.Engboost.Entities.SessionModifyRequest;
 import pl.adrianix2000.Engboost.Mappers.SessionMapper;
 import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.SessionRepository;
@@ -72,5 +73,12 @@ public class SessionController {
     public ResponseEntity<String> deleteById(@RequestParam long sessionId) {
         service.deleteSession(sessionId);
         return ResponseEntity.ok("Usunięto sesje");
+    }
+
+    @RequestMapping(path = "/modify", method = RequestMethod.PATCH)
+    public ResponseEntity<String> modifySession(@RequestParam long sessionId,
+                                                @RequestBody SessionModifyRequest request) {
+        service.modifySessionData(request, sessionId);
+        return ResponseEntity.ok("Udalo sie zmodyfikowac dane sesji");
     }
 }

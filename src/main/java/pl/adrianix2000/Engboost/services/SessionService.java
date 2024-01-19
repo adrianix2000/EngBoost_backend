@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import pl.adrianix2000.Engboost.Entities.Session;
-import pl.adrianix2000.Engboost.Entities.SessionCreateRequest;
-import pl.adrianix2000.Engboost.Entities.SessionDto;
-import pl.adrianix2000.Engboost.Entities.User;
+import pl.adrianix2000.Engboost.Entities.*;
 import pl.adrianix2000.Engboost.Mappers.SessionMapper;
 import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.SessionRepository;
@@ -58,6 +55,25 @@ public class SessionService {
             Session foundedSession = session.get();
             sessionRepository.deleteById(foundedSession.getId());
         } else {
+            throw new AppException("Nie odnaleziono sesji", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void modifySessionData(SessionModifyRequest request, long id) {
+        Optional<Session> session = sessionRepository.findById(id);
+        if(session.isPresent()) {
+            Session foundedSession = session.get();
+
+            if(request.getTitle() != null) {
+                foundedSession.setTitle(request.getTitle());
+                foundedSession.setIsshared(request.isIsshared());
+
+                sessionRepository.save(foundedSession);
+            } else {
+                throw new AppException("Nie pełne dane", HttpStatus.BAD_REQUEST);
+            }
+        }
+        else {
             throw new AppException("Nie odnaleziono sesji", HttpStatus.NOT_FOUND);
         }
     }
