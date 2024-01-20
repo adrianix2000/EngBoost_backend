@@ -17,5 +17,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     void deleteById(long id);
 
+    List<Session> findByIssharedTrue();
 
 }

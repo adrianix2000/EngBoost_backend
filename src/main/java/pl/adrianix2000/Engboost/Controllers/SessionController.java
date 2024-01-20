@@ -19,6 +19,7 @@ import pl.adrianix2000.Engboost.services.SessionService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/sessions")
@@ -80,5 +81,14 @@ public class SessionController {
                                                 @RequestBody SessionModifyRequest request) {
         service.modifySessionData(request, sessionId);
         return ResponseEntity.ok("Udalo sie zmodyfikowac dane sesji");
+    }
+
+    @RequestMapping(path = "/getPublicSessions", method = RequestMethod.GET)
+    public ResponseEntity<List<SessionDto>> getPublicSessions() {
+        List<Session> sharedSession = repository.findByIssharedTrue();
+
+        return ResponseEntity.ok(sharedSession.stream()
+                .map(mapper::map)
+                .collect(Collectors.toList()));
     }
 }
