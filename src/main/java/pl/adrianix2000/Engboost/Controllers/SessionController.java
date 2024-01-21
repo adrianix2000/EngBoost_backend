@@ -91,4 +91,10 @@ public class SessionController {
                 .map(mapper::map)
                 .collect(Collectors.toList()));
     }
+
+    @RequestMapping(path = "/increment", method = RequestMethod.PATCH)
+    public ResponseEntity<String> incrementViewNumber(@RequestParam long sessionId) {
+        service.incrementNumberOfViews(sessionId);
+        return ResponseEntity.ok("wyswietlono");
+    }
 }

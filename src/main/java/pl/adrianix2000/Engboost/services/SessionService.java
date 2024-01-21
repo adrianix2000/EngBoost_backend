@@ -10,6 +10,7 @@ import pl.adrianix2000.Engboost.exceptions.AppException;
 import pl.adrianix2000.Engboost.repositories.SessionRepository;
 import pl.adrianix2000.Engboost.repositories.UserRepository;
 
+import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.Optional;
 
@@ -74,6 +75,21 @@ public class SessionService {
             }
         }
         else {
+            throw new AppException("Nie odnaleziono sesji", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public void incrementNumberOfViews(long id) {
+        Optional<Session> session = sessionRepository.findById(id);
+        if(session.isPresent()) {
+            Session foundedSession = session.get();
+
+            foundedSession.setViewnumber(
+                    foundedSession.getViewnumber()+1
+            );
+
+            sessionRepository.save(foundedSession);
+        } else {
             throw new AppException("Nie odnaleziono sesji", HttpStatus.NOT_FOUND);
         }
     }
